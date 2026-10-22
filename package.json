@@ -1,0 +1,12 @@
+{
+  "name": "two-minute-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "一个把任务砍到两分钟内的反拖延工具",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

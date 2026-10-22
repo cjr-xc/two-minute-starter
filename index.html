@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>两分钟 · 先做第一步</title>
+  <meta name="description" content="一个把任务砍到两分钟内的反拖延工具。" />
+  <meta name="theme-color" content="#0f1e1b" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <div class="app">
+    <header class="topbar">
+      <a class="wordmark" href="#" data-view="home" aria-label="回到首页">
+        <span class="dot" aria-hidden="true"></span>两分钟
+      </a>
+      <div class="topbar-right">
+        <span id="todayStat" class="stat">今天启动 0 次</span>
+        <button class="text-btn" data-view="history">记录</button>
+      </div>
+    </header>
+
+    <main id="view-home" class="view is-active">
+      <section class="hero">
+        <h1>先做两分钟。</h1>
+        <p class="lede">不用等状态好。把事拆到小得不好意思拖。</p>
+        <form id="taskForm" class="task-form">
+          <label class="sr-only" for="taskInput">你现在最想逃避哪件事</label>
+          <input id="taskInput" type="text" autocomplete="off" placeholder="你现在最想逃避哪件事？" />
+          <button type="submit" class="btn btn-primary">拆开它</button>
+        </form>
+        <p id="tomorrowNote" class="tomorrow-note hidden"></p>
+      </section>
+
+      <section id="activeTask" class="active-task hidden" aria-live="polite">
+        <div class="section-head">
+          <h2>今天只做一件事</h2>
+          <button id="clearTask" class="text-btn">换一件</button>
+        </div>
+        <p id="activeTaskTitle" class="active-title"></p>
+        <div class="first-step">
+          <span id="activeStepTime" class="time-tag">2 分钟</span>
+          <p id="activeStepTitle"></p>
+        </div>
+        <div class="actions">
+          <button id="startFirst" class="btn btn-primary">开始 10 分钟</button>
+          <button id="shrinkFirst" class="btn btn-ghost">还是太大</button>
+        </div>
+      </section>
+
+      <section class="lower">
+        <div class="lower-block">
+          <h2>最近卡在哪</h2>
+          <div id="reasonBars" class="reason-bars"></div>
+        </div>
+        <div class="lower-block">
+          <h2>本周专注</h2>
+          <p class="big-number" id="weekMinutes">0</p>
+          <p class="muted">分钟。只算真正开始过的时间。</p>
+        </div>
+      </section>
+
+      <section class="week-section">
+        <div class="week-head">
+          <h2>最近 7 天</h2>
+          <span id="weekCount" class="week-count">0 次启动</span>
+        </div>
+        <div id="weekChart" class="week-chart" role="img" aria-label="最近 7 天的启动次数"></div>
+      </section>
+    </main>
+
+    <main id="view-breakdown" class="view">
+      <button class="back-btn" data-view="home">返回</button>
+      <div class="breakdown-head">
+        <h1 id="bdTitle"></h1>
+        <p class="lede">先选你现在最像哪种卡住。我们会把第一步再改小。</p>
+      </div>
+
+      <div id="reasonChips" class="chips" role="group" aria-label="选择卡住的原因">
+        <button class="chip" data-reason="too-big">太大，不知道从哪下手</button>
+        <button class="chip" data-reason="perfect">怕做不好</button>
+        <button class="chip" data-reason="distracted">手机太分心</button>
+        <button class="chip" data-reason="tired">太累了</button>
+        <button class="chip" data-reason="unmotivated">就是不想开始</button>
+      </div>
+
+      <div id="intervention" class="intervention hidden">
+        <p id="interventionText"></p>
+        <button id="shrinkAgain" class="text-btn">还是太大，再砍一半</button>
+      </div>
+
+      <ol id="stepsList" class="steps"></ol>
+
+      <div class="actions">
+        <button id="startFirstFromBreakdown" class="btn btn-primary">就做第一步</button>
+        <button id="adjustTimer" class="btn btn-ghost">10 分钟太久，换 5 分钟</button>
+      </div>
+    </main>
+
+    <main id="view-timer" class="view">
+      <div class="timer-stage">
+        <div class="dial">
+          <svg viewBox="0 0 320 320" aria-hidden="true">
+            <circle class="dial-track" cx="160" cy="160" r="140" />
+            <circle id="dialProgress" class="dial-progress" cx="160" cy="160" r="140" />
+            <g id="ticks"></g>
+          </svg>
+          <div class="dial-center">
+            <div id="timerTime" class="timer-time">10:00</div>
+            <div class="timer-caption">只做这一小步</div>
+          </div>
+        </div>
+      </div>
+      <h2 id="timerStep" class="timer-step"></h2>
+      <div class="actions timer-actions">
+        <button id="stuckBtn" class="btn btn-outline">我卡住了</button>
+        <button id="doneBtn" class="btn btn-primary">完成了</button>
+        <button id="pauseBtn" class="btn btn-ghost">先停一下</button>
+      </div>
+      <p id="timerHint" class="timer-hint"></p>
+    </main>
+
+    <main id="view-done" class="view">
+      <div class="done-mark" aria-hidden="true">✓</div>
+      <h1>时间到了。</h1>
+      <p id="doneText" class="lede"></p>
+      <div class="actions">
+        <button id="againBtn" class="btn btn-primary">再来 10 分钟</button>
+        <button id="fiveMoreBtn" class="btn btn-outline">只做 5 分钟</button>
+        <button id="doneToReview" class="btn btn-ghost">今天到这</button>
+      </div>
+    </main>
+
+    <main id="view-review" class="view">
+      <div class="review-head">
+        <h1>今天到这儿。</h1>
+        <p class="lede">不用总结人生，只记三件事。</p>
+      </div>
+      <form id="reviewForm" class="review-form">
+        <label>今天启动了哪件事？
+          <input id="reviewTask" type="text" placeholder="例如：复习计算机网络第三章" />
+        </label>
+        <label>哪一步最难？
+          <input id="reviewHard" type="text" placeholder="例如：打开书之后不知道看哪" />
+        </label>
+        <label>明天只做哪一步？
+          <input id="reviewNext" type="text" placeholder="例如：只看第一页，圈 3 个词" />
+        </label>
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">保存复盘</button>
+          <button type="button" class="btn btn-ghost" data-view="home">回首页</button>
+        </div>
+      </form>
+    </main>
+
+    <main id="view-history" class="view">
+      <button class="back-btn" data-view="home">返回</button>
+      <div class="history-head">
+        <h1>启动记录</h1>
+        <p class="lede">每一次开始都算数，不管有没有做完。</p>
+      </div>
+      <div id="historyList" class="history-list"></div>
+      <div class="history-footer">
+        <button id="exportBtn" class="text-btn">导出数据</button>
+        <button id="resetBtn" class="text-btn danger">清空记录</button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span>不用连续。启动一次，就算一次。</span>
+      <button id="installBtn" class="text-btn hidden">安装到桌面</button>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
