@@ -58,8 +58,8 @@ git remote add origin https://github.com/<你的用户名>/two-minute-starter.gi
 git push -u origin main
 ```
 
-3. 打开仓库的 **Settings → Pages → Build and deployment → Source**，选择 **GitHub Actions**。
-4. 等 **Actions** 里的 `Deploy to GitHub Pages` 跑完，访问：
+3. 打开仓库的 **Settings → Pages → Build and deployment → Source**，选择 **Deploy from a branch**；Branch 选 **main**，目录选 **/(root)**，保存。
+4. 等 1–2 分钟，访问：
 
 ```text
 https://<你的用户名>.github.io/two-minute-starter/
